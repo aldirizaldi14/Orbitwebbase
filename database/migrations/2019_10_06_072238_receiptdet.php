@@ -23,9 +23,9 @@ class Receiptdet extends Migration
             $table->string('receiptdet_note');
             $table->timestamp('receiptdet_created_at');
             $table->string('receiptdet_created_by');
-            $table->timestamp('receiptdet_updated_at');
-            $table->string('receiptdet_updated_by');
-            $table->timestamp('receiptdet_deleted_at');
+            $table->timestamp('receiptdet_updated_at')->nullable();
+            $table->string('receiptdet_updated_by')->nullable();
+            $table->timestamp('receiptdet_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }
@@ -37,6 +37,6 @@ class Receiptdet extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('receiptdet');
     }
 }

@@ -19,9 +19,9 @@ class Line extends Migration
             $table->string('line_description');
             $table->timestamp('line_created_at');
             $table->string('line_created_by');
-            $table->timestamp('line_updated_at');
-            $table->string('line_updated_by');
-            $table->timestamp('line_deleted_at');
+            $table->timestamp('line_updated_at')->nullable();
+            $table->string('line_updated_by')->nullable();
+            $table->timestamp('line_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

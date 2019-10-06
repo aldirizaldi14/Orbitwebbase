@@ -20,9 +20,9 @@ class AreaProductQty extends Migration
             $table->integer('quantity');
             $table->timestamp('receiptdet_created_at');
             $table->string('receiptdet_created_by');
-            $table->timestamp('receiptdet_updated_at');
-            $table->string('receiptdet_updated_by');
-            $table->timestamp('receiptdet_deleted_at');
+            $table->timestamp('receiptdet_updated_at')->nullable();
+            $table->string('receiptdet_updated_by')->nullable();
+            $table->timestamp('receiptdet_deleted_at')->nullable();
             $table->primary(['warehouse_id', 'area_id', 'product_id']);
             $table->timestamps = false;
         });

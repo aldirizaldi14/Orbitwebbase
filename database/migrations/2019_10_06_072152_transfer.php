@@ -20,9 +20,9 @@ class Transfer extends Migration
             $table->integer('transfer_user_id');
             $table->timestamp('transfer_created_at');
             $table->string('transfer_created_by');
-            $table->timestamp('transfer_updated_at');
-            $table->string('transfer_updated_by');
-            $table->timestamp('transfer_deleted_at');
+            $table->timestamp('transfer_updated_at')->nullable();
+            $table->string('transfer_updated_by')->nullable();
+            $table->timestamp('transfer_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

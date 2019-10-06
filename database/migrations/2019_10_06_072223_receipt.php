@@ -22,9 +22,9 @@ class Receipt extends Migration
             $table->timestamp('receipt_time');
             $table->timestamp('receipt_created_at');
             $table->string('receipt_created_by');
-            $table->timestamp('receipt_updated_at');
-            $table->string('receipt_updated_by');
-            $table->timestamp('receipt_deleted_at');
+            $table->timestamp('receipt_updated_at')->nullable();
+            $table->string('receipt_updated_by')->nullable();
+            $table->timestamp('receipt_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

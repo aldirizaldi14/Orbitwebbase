@@ -20,9 +20,9 @@ class Area extends Migration
             $table->integer('area_warehouse_id');
             $table->timestamp('area_created_at');
             $table->string('area_created_by');
-            $table->timestamp('area_updated_at');
-            $table->string('area_updated_by');
-            $table->timestamp('area_deleted_at');
+            $table->timestamp('area_updated_at')->nullable();
+            $table->string('area_updated_by')->nullable();
+            $table->timestamp('area_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

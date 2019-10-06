@@ -18,10 +18,10 @@ class Warehouse extends Migration
             $table->string('warehouse_name');
             $table->string('warehouse_description');
             $table->timestamp('warehouse_created_at');
-            $table->string('warehouse_created_by');
-            $table->timestamp('warehouse_updated_at');
-            $table->string('warehouse_updated_by');
-            $table->timestamp('warehouse_deleted_at');
+            $table->string('warehouse_created_by')->nullable();
+            $table->timestamp('warehouse_updated_at')->nullable();
+            $table->string('warehouse_updated_by')->nullable();
+            $table->timestamp('warehouse_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

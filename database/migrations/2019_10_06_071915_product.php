@@ -19,9 +19,9 @@ class Product extends Migration
             $table->string('product_description');
             $table->timestamp('product_created_at');
             $table->string('product_created_by');
-            $table->timestamp('product_updated_at');
-            $table->string('product_updated_by');
-            $table->timestamp('product_deleted_at');
+            $table->timestamp('product_updated_at')->nullable();
+            $table->string('product_updated_by')->nullable();
+            $table->timestamp('product_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

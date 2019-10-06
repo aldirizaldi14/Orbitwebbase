@@ -25,9 +25,9 @@ class Production extends Migration
             $table->integer('production_user_id');
             $table->timestamp('production_created_at');
             $table->string('production_created_by');
-            $table->timestamp('production_updated_at');
-            $table->string('production_updated_by');
-            $table->timestamp('production_deleted_at');
+            $table->timestamp('production_updated_at')->nullable();
+            $table->string('production_updated_by')->nullable();
+            $table->timestamp('production_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

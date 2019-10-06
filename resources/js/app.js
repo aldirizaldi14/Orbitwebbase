@@ -30,3 +30,26 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+window.$ = window.jQuery = require('jquery');
+window.Popper = require('popper.js');
+require('bootstrap');
+require('js-cookie');
+require('jquery-smooth-scroll');
+require('moment');
+require('wNumb');
+require('zenscroll');
+require('tooltip.js');
+require('malihu-custom-scrollbar-plugin');
+require('bootstrap-datepicker');
+require('select2');
+const swal = window.swal = require('sweetalert2');
+require('datatables.net');
+require('datatables.net-bs4');
+require('datatables.net-buttons');
+require('datatables.net-buttons-bs4');
+require('datatables.net-responsive');
+require('datatables.net-responsive-bs4');
+require('block-ui');
+require('jstree');
+require('jquery.typewatch');

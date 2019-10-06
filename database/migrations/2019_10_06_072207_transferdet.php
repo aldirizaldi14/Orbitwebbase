@@ -21,9 +21,9 @@ class Transferdet extends Migration
             $table->integer('transferdet_qty');
             $table->timestamp('transferdet_created_at');
             $table->string('transferdet_created_by');
-            $table->timestamp('transferdet_updated_at');
-            $table->string('transferdet_updated_by');
-            $table->timestamp('transferdet_deleted_at');
+            $table->timestamp('transferdet_updated_at')->nullable();
+            $table->string('transferdet_updated_by')->nullable();
+            $table->timestamp('transferdet_deleted_at')->nullable();
             $table->timestamps = false;
         });
     }

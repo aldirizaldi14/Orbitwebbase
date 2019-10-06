@@ -14,6 +14,14 @@ Auth::routes(['register' => false]);
 Route::get('/', 'HomeController@index');
 Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/warehouse', 'WarehouseController@index');
+Route::get('/warehouse/data', 'WarehouseController@data');
+Route::post('/warehouse', 'WarehouseController@create');
+Route::post('/warehouse/export', 'WarehouseController@export');
+Route::post('/warehouse/{id}', 'WarehouseController@update');
+Route::delete('/warehouse/{id}', 'WarehouseController@delete');
+
 Route::get('/last_update', function () {
     return date('Y-m-d H:i:s');
 });
