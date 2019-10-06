@@ -14,6 +14,7 @@ use App\Model\WarehouseModel;
 use Session;
 use Storage;
 use DB;
+use Response;
 
 class WarehouseController extends BaseController
 {
@@ -141,19 +142,13 @@ class WarehouseController extends BaseController
 
     public function export(Request $request)
     {
-        $this->validate($request, [
-            'sort' => 'required',
-            'dir' => 'required',
-        ]);
-
-        $model = new WarehouseModel();
-        $data = $model->getData($request);
+        $data = $this->data($request);
 
         $tanggal = date('Y-m');
         $tanggal = explode('-', $tanggal);
-        $path = 'files/'.$tanggal[0].'/'.$tanggal[1].'/';
-        if (!Storage::disk('public_path')->exists($path)) {
-            Storage::disk('public_path')->makeDirectory($path, $mode = 0744, true, true);
+        $path = '/files/'.$tanggal[0].'/'.$tanggal[1].'/';
+        if (!Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->makeDirectory($path, $mode = 0744, true, true);
         }
 
         $style = array(
@@ -163,46 +158,42 @@ class WarehouseController extends BaseController
         );
 
         setlocale(LC_TIME, 'id_utf8', 'Indonesian', 'id_ID.UTF-8', 'Indonesian_indonesia.1252', 'WINDOWS-1252');
+        $mc = 'C';
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $spreadsheet->getActiveSheet()->mergeCells('A1:E1');
-        $sheet->getStyle("A1:E1")->applyFromArray($style);
-        $sheet->setCellValue('A1', Session::get('account')->grpname);
+        $spreadsheet->getActiveSheet()->mergeCells('A1:'.$mc.'1');
+        $sheet->getStyle('A1:'.$mc.'1')->applyFromArray($style);
+        $sheet->setCellValue('A1', '');
 
-        $spreadsheet->getActiveSheet()->mergeCells('A2:E2');
-        $sheet->getStyle("A2:E2")->applyFromArray($style);
-        $sheet->setCellValue('A2', 'DATA KOTA');
+        $spreadsheet->getActiveSheet()->mergeCells('A2:'.$mc.'2');
+        $sheet->getStyle('A2:'.$mc.'2')->applyFromArray($style);
+        $sheet->setCellValue('A2', 'Warehouse Data');
 
-        $spreadsheet->getActiveSheet()->mergeCells('A3:E3');
+        $spreadsheet->getActiveSheet()->mergeCells('A3:'.$mc.'3');
         $sheet->setCellValue('A3', '');
 
-        $spreadsheet->getActiveSheet()->mergeCells('A4:E4');
-        $sheet->getStyle("A4:E4")->applyFromArray($style);
-        $sheet->setCellValue('A4', 'Waktu unduh : '. strftime('%A, %d-%m-%Y %H:%M:%S'));
+        $spreadsheet->getActiveSheet()->mergeCells('A4:'.$mc.'4');
+        $sheet->getStyle('A4:'.$mc.'4')->applyFromArray($style);
+        $sheet->setCellValue('A4', 'Download Time : '. strftime('%A, %d-%m-%Y %H:%M:%S'));
 
-        $sheet->setCellValue('A5', 'No.');
-        $sheet->setCellValue('B5', 'Kode');
-        $sheet->setCellValue('C5', 'Nama Warehouse');
-        $sheet->setCellValue('D5', 'Provinsi');
-        $sheet->setCellValue('E5', 'Status');
-
+        $sheet->setCellValue('A5', '#');
+        $sheet->setCellValue('B5', 'Name');
+        $sheet->setCellValue('C5', 'Description');
+        
         $data = $data['listData'];
         $i = 5;
         foreach ($data as $sub) {
             $no = $i-4;
             $i++;
             $sheet->setCellValue('A'.$i, $no);
-            $sheet->setCellValue('B'.$i, $sub->id);
-            $sheet->setCellValue('C'.$i, $sub->city);
-            $sheet->setCellValue('D'.$i, $sub->provinceDesc);
-            $sheet->setCellValue('E'.$i, $sub->statusDesc);
+            $sheet->setCellValue('B'.$i, $sub->warehouse_name);
+            $sheet->setCellValue('C'.$i, $sub->warehouse_description);
         }
 
         $writer = new Xlsx($spreadsheet);
         $filename = 'warehouse.xlsx';
-        $writer->save($path.$filename);
+        $writer->save(storage_path('app/public').$path.$filename);
 
-        $response = ['status' => 'success', 'success' => true, 'file' => $path.$filename];
-        return $response;
+        return Response::download(storage_path('app/public').$path.$filename);
     }
 }

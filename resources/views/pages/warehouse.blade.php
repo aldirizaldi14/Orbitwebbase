@@ -19,7 +19,7 @@
                                 <div class="col-md-6 col-md-1"></div>
                                 <div class="col-md-6 col-sm-11">
                                     <input type="text" class="form-control pull-left" id="txtSearch" placeholder="Search" style="width: 200px; height: 40px; margin-right: 10px;">
-                                    <button type="button" class="btn btn-accent pull-left m-btn m-btn--custom m-btn--pill m-btn--icon m-btn--air" id="btnDownload">
+                                    <button type="button" class="btn btn-accent pull-left m-btn m-btn--custom m-btn--pill m-btn--icon m-btn--air" id="btnDownload" hidden="">
                                         <i class="m-nav__link-icon fa fa-download"></i>
                                     </button>
                                     <button type="button" class="btn btn-accent pull-left m-btn m-btn--custom m-btn--pill m-btn--icon m-btn--air" id="btnAdd">
