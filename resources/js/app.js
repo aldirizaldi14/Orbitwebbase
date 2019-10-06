@@ -24,3 +24,5 @@ require('datatables.net-buttons');
 require('datatables.net-buttons-bs4');
 require('datatables.net-responsive');
 require('datatables.net-responsive-bs4');
+require('block-ui');
+require('jstree');

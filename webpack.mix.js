@@ -41,4 +41,6 @@ mix.js([
         'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
         'node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css',
         'node_modules/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css',
+        'node_modules/tether/dist/css/tether.css',
+        'node_modules/jstree/dist/themes/default/style.css',
     ],  'public/css/vendors.css');
