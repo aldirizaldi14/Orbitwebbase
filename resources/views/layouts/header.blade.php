@@ -42,7 +42,7 @@
                             <li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
                                 <a href="#" class="m-nav__link m-dropdown__toggle">
                                     <span class="m-topbar__userpic">
-                                        <img src="{{ asset('images/user3.jpg') }}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
+                                        <img src="{{ asset('images/user.png') }}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
                                     </span>
                                     <span class="m-nav__link-icon m-topbar__usericon  m--hide">
                                         <span class="m-nav__link-icon-wrapper">
