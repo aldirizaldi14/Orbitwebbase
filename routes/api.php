@@ -17,8 +17,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::group(['middleware' => ['auth', 'auth:api']], function () {
-	Route::get('/last_update', function () { return date('Y-m-d H:i:s'); });
+	Route::post('/last_update', function () { return date('Y-m-d H:i:s'); });
 });
+
+Route::post('/warehouse/data', 'Api\WarehouseController@data');
+Route::post('/warehouse/sync', 'Api\WarehouseController@sync');
+Route::post('/area/data', 'Api\AreaController@data');
+Route::post('/line/data', 'Api\LineController@data');
+Route::post('/product/data', 'Api\ProductController@data');
+
 Route::fallback(function(){
     return response()->json(['message' => 'Not Found.'], 404);
 })->name('api.fallback.404');
