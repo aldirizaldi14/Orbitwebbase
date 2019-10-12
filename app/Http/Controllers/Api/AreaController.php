@@ -25,7 +25,7 @@ class AreaController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = AreaModel::select("area.*")
-            ->addSelect('1 as area_sync');
+            ->addSelect(DB::raw('1 as area_sync'));
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('area_created_at', '>', $last_update)

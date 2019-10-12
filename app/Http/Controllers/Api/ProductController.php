@@ -25,7 +25,7 @@ class ProductController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = ProductModel::select("product.*")
-            ->addSelect('1 as product_sync');
+            ->addSelect(DB::raw('1 as product_sync'));
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('product_created_at', '>', $last_update)

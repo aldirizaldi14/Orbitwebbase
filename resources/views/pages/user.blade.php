@@ -1,4 +1,4 @@
-@section('pageTitle', 'Area')
+@section('pageTitle', 'User')
 
 @extends("layouts/app")
 
@@ -35,9 +35,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Warehouse</th>
+                                        <th>Username</th>
+                                        <th>Fullname</th>
+                                        <th>Group</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -62,27 +62,38 @@
         <div class="modal-body">
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Name *</label>
+                    <label class="col-md-4 control-label">Username *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="area_name" required="">
+                        <input type="text" class="form-control" name="user_username" required="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Description *</label>
+                    <label class="col-md-4 control-label">Fullname *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="area_description" required="">
+                        <input type="text" class="form-control" name="user_fullname" required="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-md-4 control-label">Warehouse *</label>
-                        <div class="col-md-8">
-                            <select class="form-control m-select2" id="area_warehouse_id" name="area_warehouse_id" style="width:100% !important;" required></select>
-                        </div>
+                <div class="row">
+                    <label class="col-md-4 control-label">Group *</label>
+                    <div class="col-md-8">                        
+                        <select class="form-control" id="user_group_id" name="user_group_id" style="width:100% !important;" required>
+                            <option value="1">System Admin</option>
+                            <option value="2">Production</option>
+                            <option value="3">Warehouse</option>
+                            <option value="9">Viewer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label">Password</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="user_password">
                     </div>
                 </div>
             </div>
@@ -110,22 +121,22 @@ $(document).ready(function() {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    var area_id = '';
+    var user_id = '';
 
     $("#btnAdd").click(function(){
-        area_id='';
-        $("input[name=area_name").val('');
-        $("input[name=area_description").val('');
-        $("select[name=area_warehouse_id]").val('').trigger('change');
+        user_id='';
+        $("input[name=user_username").val('');
+        $("input[name=user_fullname").val('');
+        $("input[name=user_password").val('');
         $('#modalForm').modal('show');
     });
 
     var tableColumn = [
-        { data: "area_id", width : 50, sortable: false},
-        { data: "area_name" },
-        { data: "area_description" },
-        { data: "warehouse_name" },
-        { data: "area_id", width: 100, sortable: false}
+        { data: "user_id", width : 50, sortable: false},
+        { data: "user_username" },
+        { data: "user_fullname" },
+        { data: "user_group_id" },
+        { data: "user_id", width: 100, sortable: false}
     ];
     var orderSort = '';
     var orderDir = '';
@@ -141,7 +152,7 @@ $(document).ready(function() {
         ajax: function(data, callback, settings) {
             orderSort = tableColumn[data.order[0].column].data;
             orderDir = data.order[0].dir;
-            $.getJSON('{{ url('area/data') }}', {
+            $.getJSON('{{ url('user/data') }}', {
                 draw: data.draw,
                 length: data.length,
                 start: data.start,
@@ -167,6 +178,18 @@ $(document).ready(function() {
             },
             {
                 render: function(data,type,row,index){
+                    switch(data){
+                        case '1': return 'System Admin'; break;
+                        case '2': return 'Production'; break;
+                        case '3': return 'Warehouse'; break;
+                        case '9': return 'Viewer'; break;
+                    }
+                    return '';
+                },
+                targets : [3]
+            },
+            {
+                render: function(data,type,row,index){
                     content = '<button type="button" class="btn btn-edit btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-pencil"></i></button>';
                     content += '<button type="button" class="btn btn-delete btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-trash"></i></button>';
                     return content;
@@ -178,13 +201,11 @@ $(document).ready(function() {
             $(".btn-edit").click(function(event){
                 var index = $(this).data('index');
                 var data = table.row(index).data();
-
-                area_id = data.area_id;
-                $("input[name=area_name]").val(data.area_name);
-                $("input[name=area_description]").val(data.area_description);
-                $("select[name=area_warehouse_id]").select2("trigger", "select", { 
-                    data: { id: data.warehouse_id,text:data.warehouse_name } 
-                });
+                user_id = data.user_id;
+                $("input[name=user_username]").val(data.user_username);
+                $("input[name=user_fullname]").val(data.user_fullname);
+                $("select[name=user_group_id]").val('1');
+                console.log($("select[name=user_group_id]").val());
                 $('#modalForm').modal('show');
             });
             $(".btn-delete").click(function(event){
@@ -192,7 +213,7 @@ $(document).ready(function() {
                 var data = table.row(index).data();
 
                 swal.fire({
-                    title: "Delete "+ data.area_name +" ?",
+                    title: "Delete "+ data.user_username +" ?",
                     type: "question",
                     showCancelButton : true,
                     focusCancel : true,
@@ -202,7 +223,7 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('area') }}/' + data.area_id,
+                            url: '{{ url('user') }}/' + data.user_id,
                             method: "DELETE",
                             dataType : 'json'
                         })
@@ -227,36 +248,6 @@ $(document).ready(function() {
         }
     });
 
-    $("#area_warehouse_id").select2({
-        theme:'bootstrap',
-        ajax: {
-            url: '{{ url('warehouse/data') }}',
-            dataType: 'json',
-            type: "GET",
-            delay: 250,
-            data: function (params) {
-                return {
-                    filter: params.term
-                };
-            },
-            processResults: function(data, page) {
-                var result_data = data.listData;
-                if(data.recordsTotal >= 1){
-                    return {
-                        results: $.map(result_data, function (item) {
-                            return {
-                                text: item.warehouse_name,
-                                id: item.warehouse_id
-                            }
-                        })
-                    };
-                }else{
-                    return { results : null };
-                }
-            }
-        }
-    });
-
     $("#formData").submit(function (e)
     {
         e.preventDefault();
@@ -266,7 +257,7 @@ $(document).ready(function() {
         var postData = new FormData($('#formData')[0]);
 
         $.ajax({
-            url: '{{ url('area') }}' + (area_id ? '/' + area_id : ''),
+            url: '{{ url('user') }}' + (user_id ? '/' + user_id : ''),
             method: "POST",
             data: postData,
             processData: false,
@@ -303,7 +294,7 @@ $(document).ready(function() {
     $("#btnDownload").click(function(){
         var filter = $("#txtSearch").val();
         $.ajax({
-            url: '{{ url('area') }}/export',
+            url: '{{ url('user') }}/export',
             method: "POST",
             dataType : 'json',
             data : {

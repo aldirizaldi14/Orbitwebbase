@@ -11,20 +11,17 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
 
 class UserModel extends Model implements
     AuthenticatableContract,
     AuthorizableContract,
     CanResetPasswordContract
 {
-	use Authenticatable, Authorizable, CanResetPassword;
+	use Authenticatable, Authorizable, CanResetPassword, Notifiable, SoftDeletes;
     protected $table = 'user';
     protected $primaryKey = 'user_id';
-    protected $fillable = ['user_username', 'user_password', 'user_fullname', 'user_group_id'];
-    //const CREATED_AT = 'user_created_at';
-    //const UPDATED_AT = 'user_updated_at';
-    //const DELETED_AT = 'user_deleted_at';
-
+    protected $fillable = ['user_username', 'user_password', 'user_fullname', 'user_group_id', 'created_at', 'update_at', 'deleted_at'];
 
     public function getAuthPassword()
 	{

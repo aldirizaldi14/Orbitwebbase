@@ -25,7 +25,7 @@ class WarehouseController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = WarehouseModel::select("warehouse.*")
-            ->addSelect('1 as warehouse_sync');
+            ->addSelect(DB::raw('1 as warehouse_sync'));
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('warehouse_created_at', '>', $last_update)

@@ -9,6 +9,7 @@ array_push($menuData, ['warehouse', 'Warehouse', 'fa-building']);
 array_push($menuData, ['area', 'Area', 'fa-square']);
 array_push($menuData, ['line', 'Line', 'fa-exchange']);
 array_push($menuData, ['product', 'Product', 'fa-tags']);
+array_push($menuData, ['user', 'User', 'fa-users']);
 //array_push($menuData, ['logout', 'Logout', 'fa-sign-out']);
 @endphp
 <div id="m_aside_left" class="m-grid__item  m-aside-left  m-aside-left--skin-dark ">

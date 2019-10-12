@@ -17,6 +17,13 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::group(['middleware' => ['auth', 'auth:web']], function () {
 	Route::get('/home', 'HomeController@index')->name('home');
 
+	Route::get('/user', 'UserController@index');
+	Route::get('/user/data', 'UserController@data');
+	Route::post('/user', 'UserController@create');
+	Route::post('/user/export', 'UserController@export');
+	Route::post('/user/{id}', 'UserController@update');
+	Route::delete('/user/{id}', 'UserController@delete');
+
 	Route::get('/warehouse', 'WarehouseController@index');
 	Route::get('/warehouse/data', 'WarehouseController@data');
 	Route::post('/warehouse', 'WarehouseController@create');

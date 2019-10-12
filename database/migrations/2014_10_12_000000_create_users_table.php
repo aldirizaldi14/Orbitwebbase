@@ -19,8 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('user_username')->unique();
             $table->string('user_password');
             $table->string('user_group_id');
+            $table->string('user_created_by');
+            $table->string('user_updated_by')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

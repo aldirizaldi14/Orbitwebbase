@@ -38,7 +38,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        //UserModel::insert(['user_username'=>'admin', 'user_password'=> bcrypt('123456'), 'user_group_id'=> 1, 'user_fullname'=>'Administrator']);
     }
 
     public function username()

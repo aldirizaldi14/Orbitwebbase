@@ -25,7 +25,7 @@ class LineController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = LineModel::select("line.*")
-            ->addSelect('1 as line_sync');
+            ->addSelect(DB::raw('1 as line_sync'));
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('line_created_at', '>', $last_update)
