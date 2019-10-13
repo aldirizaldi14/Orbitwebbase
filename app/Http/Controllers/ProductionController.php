@@ -68,28 +68,10 @@ class ProductionController extends BaseController
         return $result;
     }
 
-    public function create(Request $request)
-    {
-        $this->validate($request, [
-            'production_code' => 'required',
-            'production_warehouse_id' => 'required',
-        ]);
-        $data = new ProductionModel;
-        $data->production_created_by = $request->user()->user_username;
-        $process = $this->save($request, $data);
-        if ($process) {
-            $response = ['status' => 'success', 'success' => true, 'message' => 'Save success'];
-        } else {
-            $response = ['status' => 'error', 'success' => false, 'message' => 'Unable to save data'];
-        }
-        return $response;
-    }
-
     public function update($id, Request $request)
     {
         $this->validate($request, [
-            'production_code' => 'required',
-            'production_warehouse_id' => 'required',
+            'production_qty' => 'required',
         ]);
 
         $data = ProductionModel::find($id);
@@ -114,9 +96,7 @@ class ProductionController extends BaseController
 
     private function save(Request $request, ProductionModel $data)
     {
-        $data->production_code = $request->input('production_code');
-        $data->production_time = $request->input('production_time');
-        $data->production_warehouse_id = $request->input('production_warehouse_id');
+        $data->production_qty = $request->input('production_qty');
         $process = $data->save();
 
         return $process;

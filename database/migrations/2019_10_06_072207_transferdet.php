@@ -13,7 +13,7 @@ class Transferdet extends Migration
      */
     public function up()
     {
-        Schema::create('tarnsferdet', function (Blueprint $table) {
+        Schema::create('transferdet', function (Blueprint $table) {
             $table->increments('transferdet_id');
             $table->string('transferdet_code');
             $table->integer('transferdet_transfer_id');
@@ -35,6 +35,6 @@ class Transferdet extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tarnsferdet');
+        Schema::dropIfExists('transferdet');
     }
 }

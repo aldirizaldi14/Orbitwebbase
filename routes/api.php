@@ -22,6 +22,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/product/data', 'Api\ProductController@data');
 	Route::post('/production/data', 'Api\ProductionController@data');
 	Route::post('/production/sync', 'Api\ProductionController@sync');
+	Route::post('/transfer/data', 'Api\TransferController@data');
+	Route::post('/transfer/detail', 'Api\TransferController@detail');
+	Route::post('/transfer/sync', 'Api\TransferController@sync');
 
 	Route::post('/last_update', function () { return date('Y-m-d H:i:s'); });
 });

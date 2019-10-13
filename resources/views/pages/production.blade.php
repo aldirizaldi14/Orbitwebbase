@@ -66,27 +66,9 @@
         <div class="modal-body">
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Name *</label>
+                    <label class="col-md-4 control-label">Qty *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="production_code" required="">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="row">
-                    <label class="col-md-4 control-label">Description *</label>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" name="production_time" required="">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-md-4 control-label">Warehouse *</label>
-                        <div class="col-md-8">
-                            <select class="form-control" id="production_warehouse_id" name="production_warehouse_id" style="width:100% !important;" required></select>
-                        </div>
+                        <input type="text" class="form-control" name="production_qty" required="">
                     </div>
                 </div>
             </div>
@@ -118,9 +100,7 @@ $(document).ready(function() {
 
     $("#btnAdd").click(function(){
         production_id='';
-        $("input[name=production_code").val('');
-        $("input[name=production_time").val('');
-        $("select[name=production_warehouse_id]").val('').trigger('change');
+        $("input[name=production_qty").val('');
         $('#modalForm').modal('show');
     });
 
@@ -188,11 +168,7 @@ $(document).ready(function() {
                 var data = table.row(index).data();
 
                 production_id = data.production_id;
-                $("input[name=production_code]").val(data.production_code);
-                $("input[name=production_time]").val(data.production_time);
-                $("select[name=production_warehouse_id]").select2("trigger", "select", { 
-                    data: { id: data.warehouse_id,text:data.warehouse_name } 
-                });
+                $("input[name=production_qty]").val(data.production_qty);
                 $('#modalForm').modal('show');
             });
             $(".btn-delete").click(function(event){

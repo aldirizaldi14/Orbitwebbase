@@ -25,7 +25,6 @@ class ProductionController extends BaseController
     public function data(Request $request)
     {
         $last_update = $request->get('last_update');
-        $last_update = '2019-10-13 13:38:27';
         $data = ProductionModel::select("production.*")
             ->addSelect(DB::raw('1 as production_sync'));
         if($last_update){
