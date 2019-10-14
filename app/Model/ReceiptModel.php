@@ -15,7 +15,7 @@ class ReceiptModel extends Model
     protected $fillable = [
         'receipt_code', 
         'receipt_time', 
-        'receipt_shift', 
+        'receipt_sent_at', 
         'receipt_user_id', 
         'receipt_created_at',
         'receipt_created_by',

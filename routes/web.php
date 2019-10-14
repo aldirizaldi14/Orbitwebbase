@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth', 'auth:web']], function () {
 
 	Route::get('/transfer', 'TransferController@index');
 	Route::get('/transfer/data', 'TransferController@data');
+	Route::get('/transfer/detail', 'TransferController@detail');
 	Route::post('/transfer', 'TransferController@create');
 	Route::post('/transfer/export', 'TransferController@export');
 	Route::post('/transfer/{id}', 'TransferController@update');
@@ -68,6 +69,7 @@ Route::group(['middleware' => ['auth', 'auth:web']], function () {
 
 	Route::get('/receipt', 'ReceiptController@index');
 	Route::get('/receipt/data', 'ReceiptController@data');
+	Route::get('/receipt/detail', 'ReceiptController@detail');
 	Route::post('/receipt', 'ReceiptController@create');
 	Route::post('/receipt/export', 'ReceiptController@export');
 	Route::post('/receipt/{id}', 'ReceiptController@update');

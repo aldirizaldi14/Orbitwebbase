@@ -35,8 +35,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Code</th>
                                         <th>Time</th>
+                                        <th>Code</th>
                                         <th>Product</th>
                                         <th>Line</th>
                                         <th>Shift</th>
@@ -106,8 +106,8 @@ $(document).ready(function() {
 
     var tableColumn = [
         { data: "production_id", width : 50, sortable: false},
-        { data: "production_code" },
         { data: "production_time" },
+        { data: "production_code" },
         { data: "product_code" },
         { data: "line_name" },
         { data: "production_shift" },

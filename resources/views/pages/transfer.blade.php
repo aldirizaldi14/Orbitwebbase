@@ -35,9 +35,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Code</th>
                                         <th>Time</th>
-                                        <th>User</th>
+                                        <th>Code</th>
+                                        <th>Sent At</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -62,37 +62,44 @@
         <div class="modal-body">
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Name *</label>
+                    <label class="col-md-4 control-label">Time *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="transfer_code" required="">
+                        <input type="text" class="form-control" name="transfer_time" readonly="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Description *</label>
+                    <label class="col-md-4 control-label">Code *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="transfer_time" required="">
+                        <input type="text" class="form-control" name="transfer_code" readonly="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-md-4 control-label">Warehouse *</label>
-                        <div class="col-md-8">
-                            <select class="form-control" id="transfer_warehouse_id" name="transfer_warehouse_id" style="width:100% !important;" required></select>
-                        </div>
+                <div class="row">
+                    <label class="col-md-4 control-label">Sent at *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="transfer_sent_at" readonly="">
                     </div>
                 </div>
             </div>
-            <div class="form-group" style="color: red;">
-                <br/>You need to fill all field with * mark
+            <div class="table-responsive">
+                <table id="tableDetail" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product Code</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                </table>
+                <tbody></tbody>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
     </form>
 </div>
@@ -116,14 +123,15 @@ $(document).ready(function() {
         transfer_id='';
         $("input[name=transfer_code").val('');
         $("input[name=transfer_time").val('');
+        $("input[name=transfer_sent_at").val('');
         $('#modalForm').modal('show');
     });
 
     var tableColumn = [
         { data: "transfer_id", width : 50, sortable: false},
+        { data: "transfer_time" },
         { data: "transfer_code" },
-        { data: "transfer_time" },
-        { data: "transfer_time" },
+        { data: "transfer_sent_at" },
         { data: "transfer_id", width: 100, sortable: false}
     ];
     var orderSort = '';
@@ -166,11 +174,11 @@ $(document).ready(function() {
             },
             {
                 render: function(data,type,row,index){
-                    content = '<button type="button" class="btn btn-edit btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-pencil"></i></button>';
+                    content = '<button type="button" class="btn btn-edit btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-file"></i></button>';
                     content += '<button type="button" class="btn btn-delete btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-trash"></i></button>';
                     return content;
                 },
-                targets : [3]
+                targets : [4]
             },
         ],
         drawCallback: function(e,response){
@@ -181,9 +189,8 @@ $(document).ready(function() {
                 transfer_id = data.transfer_id;
                 $("input[name=transfer_code]").val(data.transfer_code);
                 $("input[name=transfer_time]").val(data.transfer_time);
-                $("select[name=transfer_warehouse_id]").select2("trigger", "select", { 
-                    data: { id: data.warehouse_id,text:data.warehouse_name } 
-                });
+                $("input[name=transfer_sent_at]").val(data.transfer_sent_at);
+                tableDetail.ajax.reload();
                 $('#modalForm').modal('show');
             });
             $(".btn-delete").click(function(event){
@@ -224,6 +231,45 @@ $(document).ready(function() {
                 });
             });
         }
+    });
+
+    var tableColumnDetail = [
+        { data: "transferdet_id", width : 50, sortable: false},
+        { data: "product_code" },
+        { data: "product_description" },
+        { data: "transferdet_qty" },
+    ];
+    var tableDetail = $("#tableDetail").DataTable({
+        filter : false,
+        sortable: false,
+        info: true,
+        paging: false,
+        processing: true,
+        serverSide: true,
+        ordering : false,
+        order: [[ 1, "asc" ]],
+        ajax: function(data, callback, settings) {
+            $.getJSON('{{ url('transfer/detail') }}', {
+                draw: data.draw,
+                transfer_id: transfer_id,
+            }, function(res) {
+                callback({
+                    recordsTotal: res.recordsTotal,
+                    recordsFiltered: res.recordsFiltered,
+                    data: res.listData
+                });
+            });
+        },
+        columns: tableColumnDetail,
+        columnDefs: [
+            {
+                render: function(data,type,row,index){
+                    var info = table.page.info();
+                    return index.row+info.start+1;
+                },
+                targets : [0]
+            },
+        ]
     });
 
     $("#transfer_warehouse_id").select2({

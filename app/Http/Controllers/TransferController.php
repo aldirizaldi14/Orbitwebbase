@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use App\Model\TransferModel;
+use App\Model\TransferdetModel;
 use Session;
 use Storage;
 use DB;
@@ -51,6 +52,27 @@ class TransferController extends BaseController
         $data = $data->get();
         
         $count = TransferModel::whereRaw($filter)
+            ->count();
+
+        $result = [
+            'draw' => $draw,
+            'recordsTotal' => $count,
+            'recordsFiltered' => $count,
+            'listData' => $data,
+        ];
+
+        return $result;
+    }
+
+    public function detail(Request $request)
+    {
+        $draw = $request->get('draw');
+        $transfer_id = (int) $request->get('transfer_id');
+
+        $data = TransferdetModel::where('transferdet_transfer_id', $transfer_id)
+            ->join('product', 'product_id', 'transferdet_product_id')
+            ->get();
+        $count = TransferdetModel::where('transferdet_transfer_id', $transfer_id)
             ->count();
 
         $result = [

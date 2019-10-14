@@ -35,9 +35,9 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Code</th>
                                         <th>Time</th>
-                                        <th>User</th>
+                                        <th>Code</th>
+                                        <th>Receiver</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -62,37 +62,45 @@
         <div class="modal-body">
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Name *</label>
+                    <label class="col-md-4 control-label">Time *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="receipt_code" required="">
+                        <input type="text" class="form-control" name="receipt_time" readonly="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="row">
-                    <label class="col-md-4 control-label">Description *</label>
+                    <label class="col-md-4 control-label">Code *</label>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" name="receipt_time" required="">
+                        <input type="text" class="form-control" name="receipt_code" readonly="">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <div class="form-group">
-                    <div class="row">
-                        <label class="col-md-4 control-label">Warehouse *</label>
-                        <div class="col-md-8">
-                            <select class="form-control" id="receipt_warehouse_id" name="receipt_warehouse_id" style="width:100% !important;" required></select>
-                        </div>
+                <div class="row">
+                    <label class="col-md-4 control-label">Receiver *</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="receipt_user_id" readonly="">
                     </div>
                 </div>
             </div>
-            <div class="form-group" style="color: red;">
-                <br/>You need to fill all field with * mark
+            <div class="table-responsive">
+                <table id="tableDetail" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product Code</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                </table>
+                <tbody></tbody>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="btnSave">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
     </form>
 </div>
@@ -116,14 +124,15 @@ $(document).ready(function() {
         receipt_id='';
         $("input[name=receipt_code").val('');
         $("input[name=receipt_time").val('');
+        $("input[name=receipt_user_id").val('');
         $('#modalForm').modal('show');
     });
 
     var tableColumn = [
         { data: "receipt_id", width : 50, sortable: false},
+        { data: "receipt_time" },
         { data: "receipt_code" },
-        { data: "receipt_time" },
-        { data: "receipt_time" },
+        { data: "user_fullname" },
         { data: "receipt_id", width: 100, sortable: false}
     ];
     var orderSort = '';
@@ -166,11 +175,11 @@ $(document).ready(function() {
             },
             {
                 render: function(data,type,row,index){
-                    content = '<button type="button" class="btn btn-edit btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-pencil"></i></button>';
+                    content = '<button type="button" class="btn btn-edit btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-file"></i></button>';
                     content += '<button type="button" class="btn btn-delete btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-trash"></i></button>';
                     return content;
                 },
-                targets : [3]
+                targets : [4]
             },
         ],
         drawCallback: function(e,response){
@@ -181,9 +190,8 @@ $(document).ready(function() {
                 receipt_id = data.receipt_id;
                 $("input[name=receipt_code]").val(data.receipt_code);
                 $("input[name=receipt_time]").val(data.receipt_time);
-                $("select[name=receipt_warehouse_id]").select2("trigger", "select", { 
-                    data: { id: data.warehouse_id,text:data.warehouse_name } 
-                });
+                $("input[name=receipt_user_id]").val(data.user_fullname);
+                tableDetail.ajax.reload();
                 $('#modalForm').modal('show');
             });
             $(".btn-delete").click(function(event){
@@ -224,6 +232,46 @@ $(document).ready(function() {
                 });
             });
         }
+    });
+
+    var tableColumnDetail = [
+        { data: "receiptdet_id", width : 50, sortable: false},
+        { data: "product_code" },
+        { data: "product_description" },
+        { data: "receiptdet_qty" },
+        { data: "receiptdet_note" },
+    ];
+    var tableDetail = $("#tableDetail").DataTable({
+        filter : false,
+        sortable: false,
+        info: true,
+        paging: false,
+        processing: true,
+        serverSide: true,
+        ordering : false,
+        order: [[ 1, "asc" ]],
+        ajax: function(data, callback, settings) {
+            $.getJSON('{{ url('receipt/detail') }}', {
+                draw: data.draw,
+                receipt_id: receipt_id,
+            }, function(res) {
+                callback({
+                    recordsTotal: res.recordsTotal,
+                    recordsFiltered: res.recordsFiltered,
+                    data: res.listData
+                });
+            });
+        },
+        columns: tableColumnDetail,
+        columnDefs: [
+            {
+                render: function(data,type,row,index){
+                    var info = table.page.info();
+                    return index.row+info.start+1;
+                },
+                targets : [0]
+            },
+        ]
     });
 
     $("#receipt_warehouse_id").select2({

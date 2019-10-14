@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 use App\Model\ReceiptModel;
+use App\Model\ReceiptdetModel;
 use Session;
 use Storage;
 use DB;
@@ -44,13 +45,35 @@ class ReceiptController extends BaseController
         )");
 
         $data = ReceiptModel::orderBy($sort, $dir)
-            ->whereRaw($filter);
+            ->whereRaw($filter)
+            ->join('user', 'user_id', 'receipt_user_id');
         if ($length) {  
             $data->skip($start)->take($length); 
         }
         $data = $data->get();
         
         $count = ReceiptModel::whereRaw($filter)
+            ->count();
+
+        $result = [
+            'draw' => $draw,
+            'recordsTotal' => $count,
+            'recordsFiltered' => $count,
+            'listData' => $data,
+        ];
+
+        return $result;
+    }
+
+    public function detail(Request $request)
+    {
+        $draw = $request->get('draw');
+        $receipt_id = (int) $request->get('receipt_id');
+
+        $data = ReceiptdetModel::where('receiptdet_receipt_id', $receipt_id)
+            ->join('product', 'product_id', 'receiptdet_product_id')
+            ->get();
+        $count = ReceiptdetModel::where('receiptdet_receipt_id', $receipt_id)
             ->count();
 
         $result = [

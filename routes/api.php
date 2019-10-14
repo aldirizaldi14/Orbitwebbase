@@ -25,6 +25,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/transfer/data', 'Api\TransferController@data');
 	Route::post('/transfer/detail', 'Api\TransferController@detail');
 	Route::post('/transfer/sync', 'Api\TransferController@sync');
+	Route::post('/receipt/data', 'Api\ReceiptController@data');
+	Route::post('/receipt/detail', 'Api\ReceiptController@detail');
+	Route::post('/receipt/sync', 'Api\ReceiptController@sync');
 
 	Route::post('/last_update', function () { return date('Y-m-d H:i:s'); });
 });
