@@ -59,8 +59,6 @@ class TransferController extends BaseController
         $user = Auth::guard('api')->user();
         $data = json_decode($request->data);
         $detail = json_decode($request->detail);
-        Log::debug($request->data);
-        Log::debug($request->detail);
 
         DB::beginTransaction();
         try {

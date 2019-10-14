@@ -75,6 +75,14 @@ Route::group(['middleware' => ['auth', 'auth:web']], function () {
 	Route::post('/receipt/{id}', 'ReceiptController@update');
 	Route::delete('/receipt/{id}', 'ReceiptController@delete');
 
+	Route::get('/allocation', 'AllocationController@index');
+	Route::get('/allocation/data', 'AllocationController@data');
+	Route::get('/allocation/detail', 'AllocationController@detail');
+	Route::post('/allocation', 'AllocationController@create');
+	Route::post('/allocation/export', 'AllocationController@export');
+	Route::post('/allocation/{id}', 'AllocationController@update');
+	Route::delete('/allocation/{id}', 'AllocationController@delete');
+
 	Route::get('/stock', 'StockController@index');
 	Route::get('/stock/data', 'StockController@data');
 	Route::post('/stock', 'StockController@create');

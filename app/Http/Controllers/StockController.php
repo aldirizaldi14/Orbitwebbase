@@ -43,7 +43,7 @@ class StockController extends BaseController
             LOWER(area_name) LIKE '%".strtolower($filter)."%'
             OR LOWER(product_code) LIKE '%".strtolower($filter)."%'
             OR LOWER(product_description) LIKE '%".strtolower($filter)."%'
-        )");
+        ) AND quantity > 0");
 
         $data = AreaProductQty::orderBy($sort, $dir)
             ->whereRaw($filter)
