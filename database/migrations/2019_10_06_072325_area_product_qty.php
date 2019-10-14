@@ -18,11 +18,11 @@ class AreaProductQty extends Migration
             $table->integer('area_id');
             $table->integer('product_id');
             $table->integer('quantity');
-            $table->timestamp('receiptdet_created_at');
-            $table->string('receiptdet_created_by');
-            $table->timestamp('receiptdet_updated_at')->nullable();
-            $table->string('receiptdet_updated_by')->nullable();
-            $table->timestamp('receiptdet_deleted_at')->nullable();
+            $table->timestamp('qty_created_at');
+            $table->string('qty_created_by');
+            $table->timestamp('qty_updated_at')->nullable();
+            $table->string('qty_updated_by')->nullable();
+            $table->timestamp('qty_deleted_at')->nullable();
             $table->primary(['warehouse_id', 'area_id', 'product_id']);
             $table->timestamps = false;
         });

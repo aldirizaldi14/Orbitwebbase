@@ -4,7 +4,7 @@ array_push($menuData, ['dashboard', 'Dashboard', 'fa-home']);
 array_push($menuData, ['production', 'Production', 'fa-briefcase']);
 array_push($menuData, ['transfer', 'Transfer', 'fa-archive']);
 array_push($menuData, ['receipt', 'Receipt', 'fa-dropbox']);
-array_push($menuData, ['search', 'Search', 'fa-search']);
+array_push($menuData, ['stock', 'Stock', 'fa-search']);
 array_push($menuData, ['warehouse', 'Warehouse', 'fa-building']);
 array_push($menuData, ['area', 'Area', 'fa-square']);
 array_push($menuData, ['line', 'Line', 'fa-exchange']);

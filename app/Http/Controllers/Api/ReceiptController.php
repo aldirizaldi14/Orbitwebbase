@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Model\TransferModel;
 use App\Model\ReceiptModel;
 use App\Model\ReceiptdetModel;
+use App\Model\AreaProductQty;
 use DB;
 use Log;
 use Response;
@@ -104,6 +105,22 @@ class ReceiptController extends BaseController
                 $receiptdet->receiptdet_qty = $det->receiptdet_qty;
                 $receiptdet->receiptdet_note = $det->receiptdet_note;
                 $receiptdet->save();
+
+                $qty = AreaProductQty::where('area_id', 0)
+                    ->where('product_id', $det->receiptdet_product_id)
+                    ->first();
+                if(! $qty){
+                    $qty = new AreaProductQty();
+                    $qty->qty_created_by = $user->user_username;
+                    $qty->warehouse_id = 0;
+                    $qty->area_id = 0;
+                    $qty->product_id = $det->receiptdet_product_id;
+                    $qty->quantity = $det->receiptdet_qty;
+                }else{
+                    $qty->qty_updated_by = $user->user_username;
+                    $qty->quantity = $det->receiptdet_qty + $qty->quantity;
+                }
+                $qty->save();
             }
 
             DB::commit();

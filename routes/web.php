@@ -74,4 +74,11 @@ Route::group(['middleware' => ['auth', 'auth:web']], function () {
 	Route::post('/receipt/export', 'ReceiptController@export');
 	Route::post('/receipt/{id}', 'ReceiptController@update');
 	Route::delete('/receipt/{id}', 'ReceiptController@delete');
+
+	Route::get('/stock', 'StockController@index');
+	Route::get('/stock/data', 'StockController@data');
+	Route::post('/stock', 'StockController@create');
+	Route::post('/stock/export', 'StockController@export');
+	Route::post('/stock/{id}', 'StockController@update');
+	Route::delete('/stock/{id}', 'StockController@delete');
 });
