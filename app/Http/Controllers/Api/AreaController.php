@@ -25,12 +25,13 @@ class AreaController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = AreaModel::select("area.*")
-            ->addSelect(DB::raw('1 as area_sync'));
+            ->addSelect(DB::raw('1 as area_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
-                $q->where('area_created_at', '>', $last_update)
-                    ->where('area_updated_at', '>', $last_update)
-                    ->where('area_deleted_at', '>', $last_update);
+                $q->where('area_created_at', '>=', $last_update)
+                    ->orWhere('area_updated_at', '>=', $last_update)
+                    ->orWhere('area_deleted_at', '>=', $last_update);
             });
         }
         $data = $data->get();

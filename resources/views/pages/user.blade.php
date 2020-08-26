@@ -84,7 +84,6 @@
                             <option value="1">System Admin</option>
                             <option value="2">Production</option>
                             <option value="3">Warehouse</option>
-                            <option value="9">Viewer</option>
                         </select>
                     </div>
                 </div>
@@ -223,8 +222,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('user') }}/' + data.user_id,
-                            method: "DELETE",
+                            url: '{{ url('user') }}/delete/' + data.user_id,
+                            method: "POST",
                             dataType : 'json'
                         })
                         .done(function(resp) {

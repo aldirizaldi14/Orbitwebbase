@@ -20,6 +20,7 @@ class ProductionModel extends Model
         'production_shift', 
         'production_batch', 
         'production_qty', 
+        'production_remark', 
         'production_user_id', 
         'production_created_at',
         'production_created_by',

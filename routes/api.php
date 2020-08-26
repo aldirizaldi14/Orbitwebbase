@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 Route::post('/login', 'Api\LoginController@login');
 
 Route::group(['middleware' => ['auth:api']], function () {
+	Route::post('/changepass', 'Api\LoginController@changepass');
 	Route::post('/warehouse/data', 'Api\WarehouseController@data');
 	Route::post('/warehouse/sync', 'Api\WarehouseController@sync');
 	Route::post('/area/data', 'Api\AreaController@data');
@@ -31,6 +32,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 	Route::post('/allocation/data', 'Api\AllocationController@data');
 	Route::post('/allocation/detail', 'Api\AllocationController@detail');
 	Route::post('/allocation/sync', 'Api\AllocationController@sync');
+	Route::post('/delivery/data', 'Api\DeliveryController@data');
+	Route::post('/delivery/detail', 'Api\DeliveryController@detail');
+	Route::post('/delivery/sync', 'Api\DeliveryController@sync');
 	Route::post('/qty/data', 'Api\QtyController@data');
 
 	Route::post('/last_update', function () { return date('Y-m-d H:i:s'); });

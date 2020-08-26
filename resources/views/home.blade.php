@@ -25,7 +25,34 @@
     </div>
     <!-- END: Subheader -->
     <div class="m-content">
-        Content
+        <center><h2>History in last 30 days</h2></center>
+        <div id="chart_div" style="width: 100%; height: 500px;"></div>
     </div>
 </div>
+
+<script type="text/javascript" src="{{ url('js/gchart.js') }}"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable([
+      ['Date', 'Production', 'Delivery'],
+      @foreach($data as $datum)
+      ['{{ $datum[0] }}', {{ $datum[1] }}, {{ $datum[2] }}],
+      @endforeach
+    ]);
+
+    var options = {
+        title: '',
+        hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+        vAxis: {minValue: 0},
+        legend: {position: 'top', maxLines: 3},
+        stitlePosition: 'none',
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
 @endsection

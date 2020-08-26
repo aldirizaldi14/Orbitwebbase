@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 use App\Model\TransferModel;
 use App\Model\ReceiptModel;
@@ -29,15 +30,21 @@ class ReceiptController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = ReceiptModel::select("receipt.*")
-            ->addSelect(DB::raw('1 as receipt_sync'));
+            ->addSelect(DB::raw('1 as receipt_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('receipt_created_at', '>=', $last_update)
                     ->orWhere('receipt_updated_at', '>=', $last_update)
                     ->orWhere('receipt_deleted_at', '>=', $last_update);
             });
+        }else{
+            $data->where(function($q) use ($last_update){
+                $q->where('receipt_created_at', '>=', Carbon::now()->subDays(2));
+            });
         }
         $data = $data->get();
+        Log::info($data);
         return $data;
     }
 
@@ -86,6 +93,9 @@ class ReceiptController extends BaseController
             $receipt->receipt_status = $data->receipt_status;
             $save = $receipt->save();
 
+            $transfer->transfer_sent_at = $data->receipt_time;
+            $transfer->save();
+
             foreach ($detail as $det) {
                 $receiptdet = ReceiptdetModel::where('receiptdet_receipt_id', $receipt->receipt_id)
                     ->where('receiptdet_product_id', $det->receiptdet_product_id)
@@ -104,7 +114,7 @@ class ReceiptController extends BaseController
                 $receiptdet->receiptdet_note = $det->receiptdet_note;
                 $receiptdet->save();
 
-                $qty = AreaProductQty::where('area_id', 0)
+                $qty = AreaProductQty::where('warehouse_id', 0)
                     ->where('product_id', $det->receiptdet_product_id)
                     ->first();
                 if(! $qty){
@@ -114,11 +124,13 @@ class ReceiptController extends BaseController
                     $qty->area_id = 0;
                     $qty->product_id = $det->receiptdet_product_id;
                     $qty->quantity = $det->receiptdet_qty;
+                    $qty->save();
                 }else{
-                    $qty->qty_updated_by = $user->user_username;
-                    $qty->quantity = $det->receiptdet_qty + $qty->quantity;
+                    $t = $det->receiptdet_qty + $qty->quantity;
+                    AreaProductQty::where('warehouse_id', 0)
+                        ->where('product_id', $det->receiptdet_product_id)
+                        ->update(['qty_updated_by'=> $user->user_username, 'quantity'=> $t]);
                 }
-                $qty->save();
             }
 
             DB::commit();

@@ -48,7 +48,7 @@ class StockController extends BaseController
         $data = AreaProductQty::orderBy($sort, $dir)
             ->whereRaw($filter)
             ->leftJoin('area', 'area.area_id', '=', 'area_product_qty.area_id')
-            ->leftJoin('warehouse', 'warehouse.warehouse_id', '=', 'area.area_warehouse_id')
+            ->leftJoin('warehouse', 'warehouse.warehouse_id', '=', 'area_product_qty.warehouse_id')
             ->leftJoin('product', 'product.product_id', '=', 'area_product_qty.product_id');
         if ($length) {  
             $data->skip($start)->take($length); 
@@ -57,7 +57,7 @@ class StockController extends BaseController
         
         $count = AreaProductQty::whereRaw($filter)
             ->leftJoin('area', 'area.area_id', '=', 'area_product_qty.area_id')
-            ->leftJoin('warehouse', 'warehouse.warehouse_id', '=', 'area.area_warehouse_id')
+            ->leftJoin('warehouse', 'warehouse.warehouse_id', '=', 'area_product_qty.warehouse_id')
             ->leftJoin('product', 'product.product_id', '=', 'area_product_qty.product_id')
             ->count();
 

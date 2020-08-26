@@ -8,9 +8,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 use App\Model\TransferModel;
 use App\Model\TransferdetModel;
+use App\Model\AreaProductQty;
 use DB;
 use Log;
 use Response;
@@ -26,16 +28,23 @@ class TransferController extends BaseController
     public function data(Request $request)
     {
         $last_update = $request->get('last_update');
+        Log::info($last_update);
         $data = TransferModel::select("transfer.*")
-            ->addSelect(DB::raw('1 as transfer_sync'));
+            ->addSelect(DB::raw('1 as transfer_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('transfer_created_at', '>=', $last_update)
                     ->orWhere('transfer_updated_at', '>=', $last_update)
                     ->orWhere('transfer_deleted_at', '>=', $last_update);
             });
+        }else{
+            $data->where(function($q) use ($last_update){
+                $q->where('transfer_created_at', '>=', Carbon::now()->subDays(2));
+            });
         }
         $data = $data->get();
+        Log::info($data);
         return $data;
     }
 
@@ -92,6 +101,14 @@ class TransferController extends BaseController
                 $transferdet->transferdet_product_id = $det->transferdet_product_id;
                 $transferdet->transferdet_qty = $det->transferdet_qty;
                 $transferdet->save();
+
+                $qty = AreaProductQty::where('warehouse_id', 1)
+                    ->where('product_id', $det->transferdet_product_id)
+                    ->first();
+                $t = $qty->quantity - $det->transferdet_qty;
+                AreaProductQty::where('warehouse_id', 1)
+                    ->where('product_id', $det->transferdet_product_id)
+                    ->update(['qty_updated_by'=> $user->user_username, 'quantity'=> $t]);
             }
             DB::commit();
             return ['status' => 'success', 'success' => true, 'message' => 'Saved'];

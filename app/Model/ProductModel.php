@@ -14,12 +14,14 @@ class ProductModel extends Model
     protected $primaryKey = 'product_id';
     protected $fillable = [
         'product_code', 
+        'product_code_alt', 
         'product_description', 
         'product_created_at',
         'product_created_by',
         'product_updated_at',
         'product_updated_by',
         'product_deleted_at',
+		'product_location_alt',
     ];
     protected $hidden = [];
     const CREATED_AT = 'product_created_at';

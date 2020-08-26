@@ -43,7 +43,6 @@ class ProductionController extends BaseController
             LOWER(production_code) LIKE '%".strtolower($filter)."%'
             OR LOWER(product_code) LIKE '%".strtolower($filter)."%'
         )");
-
         $data = ProductionModel::orderBy($sort, $dir)
             ->whereRaw($filter)
             ->join('product', 'production_product_id', '=', 'product_id')

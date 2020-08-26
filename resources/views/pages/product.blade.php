@@ -36,8 +36,10 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Code</th>
+                                        <th>Alternative Code</th>
                                         <th>Description</th>
-                                        <th>&nbsp;</th>
+										<th>Location</th>
+										<th>&nbsp;</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -69,9 +71,25 @@
             </div>
             <div class="form-group">
                 <div class="row">
+                    <label class="col-md-4 control-label">Alternative Code</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="product_code_alt" required="">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label class="col-md-4 control-label">Description *</label>
                     <div class="col-md-8">
                         <input type="text" class="form-control" name="product_description" required="">
+                    </div>
+                </div>
+            </div>
+			<div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 control-label">Location </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="product_location_alt" >
                     </div>
                 </div>
             </div>
@@ -104,14 +122,18 @@ $(document).ready(function() {
     $("#btnAdd").click(function(){
         product_id='';
         $("input[name=product_code").val('');
+        $("input[name=product_code_alt").val('');
         $("input[name=product_description").val('');
+        $("input[name=product_location_alt").val('');
         $('#modalForm').modal('show');
     });
 
     var tableColumn = [
         { data: "product_id", width : 50, sortable: false},
         { data: "product_code" },
-        { data: "product_description" },
+        { data: "product_code_alt" },
+        { data: "product_description" }, 
+		{ data: "product_location_alt" }, 
         { data: "product_id", width: 100, sortable: false}
     ];
     var orderSort = '';
@@ -158,7 +180,7 @@ $(document).ready(function() {
                     content += '<button type="button" class="btn btn-delete btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-trash"></i></button>';
                     return content;
                 },
-                targets : [3]
+                targets : [5]
             },
         ],
         drawCallback: function(e,response){
@@ -168,7 +190,9 @@ $(document).ready(function() {
 
                 product_id = data.product_id;
                 $("input[name=product_code]").val(data.product_code);
+                $("input[name=product_code_alt]").val(data.product_code_alt);
                 $("input[name=product_description]").val(data.product_description);
+                $("input[name=product_location_alt]").val(data.product_location_alt);
                 $('#modalForm').modal('show');
             });
             $(".btn-delete").click(function(event){
@@ -186,8 +210,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('product') }}/' + data.product_id,
-                            method: "DELETE",
+                            url: '{{ url('product') }}/delete/' + data.product_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {

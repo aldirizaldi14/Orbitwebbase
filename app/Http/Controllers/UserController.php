@@ -15,6 +15,7 @@ use Session;
 use Storage;
 use DB;
 use Response;
+use Str;
 
 class UserController extends BaseController
 {
@@ -74,6 +75,7 @@ class UserController extends BaseController
         ]);
         $data = new UserModel;
         $data->user_created_by = $request->user()->user_username;
+        $data->api_token = Str::random(60);
         $process = $this->save($request, $data);
         if ($process) {
             $response = ['status' => 'success', 'success' => true, 'message' => 'Save success'];

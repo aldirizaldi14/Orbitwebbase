@@ -41,16 +41,16 @@ class ProductController extends BaseController
 
         $filter = DB::raw("(
             LOWER(product_code) LIKE '%".strtolower($filter)."%'
+            OR LOWER(product_code_alt) LIKE '%".strtolower($filter)."%'
             OR LOWER(product_description) LIKE '%".strtolower($filter)."%'
         )");
-
         $data = ProductModel::orderBy($sort, $dir)
             ->whereRaw($filter);
-        if ($length) {  
-            $data->skip($start)->take($length); 
+        if ($length) {
+            $data->skip($start)->take($length);
         }
         $data = $data->get();
-        
+
         $count = ProductModel::whereRaw($filter)
             ->count();
 
@@ -111,7 +111,9 @@ class ProductController extends BaseController
     private function save(Request $request, ProductModel $data)
     {
         $data->product_code = $request->input('product_code');
+        $data->product_code_alt = $request->input('product_code_alt');
         $data->product_description = $request->input('product_description');
+		$data->product_location_alt = $request->input('product_location_alt');
         $process = $data->save();
 
         return $process;
@@ -158,7 +160,7 @@ class ProductController extends BaseController
         );
 
         setlocale(LC_TIME, 'id_utf8', 'Indonesian', 'id_ID.UTF-8', 'Indonesian_indonesia.1252', 'WINDOWS-1252');
-        $mc = 'C';
+        $mc = 'D';
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $spreadsheet->getActiveSheet()->mergeCells('A1:'.$mc.'1');
@@ -177,9 +179,10 @@ class ProductController extends BaseController
         $sheet->setCellValue('A4', 'Download Time : '. strftime('%A, %d-%m-%Y %H:%M:%S'));
 
         $sheet->setCellValue('A5', '#');
-        $sheet->setCellValue('B5', 'Name');
-        $sheet->setCellValue('C5', 'Description');
-        
+        $sheet->setCellValue('B5', 'Code');
+        $sheet->setCellValue('C5', 'Alternative Code');
+        $sheet->setCellValue('D5', 'Description');
+
         $data = $data['listData'];
         $i = 5;
         foreach ($data as $sub) {
@@ -187,7 +190,8 @@ class ProductController extends BaseController
             $i++;
             $sheet->setCellValue('A'.$i, $no);
             $sheet->setCellValue('B'.$i, $sub->product_code);
-            $sheet->setCellValue('C'.$i, $sub->product_description);
+            $sheet->setCellValue('C'.$i, $sub->product_code_alt);
+            $sheet->setCellValue('D'.$i, $sub->product_description);
         }
 
         $writer = new Xlsx($spreadsheet);

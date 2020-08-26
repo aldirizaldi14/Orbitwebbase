@@ -26,13 +26,6 @@ class QtyController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = AreaProductQty::select("*");
-        if($last_update){
-            $data->where(function($q) use ($last_update){
-                $q->where('qty_created_at', '>=', $last_update)
-                    ->orWhere('qty_updated_at', '>=', $last_update)
-                    ->orWhere('qty_deleted_at', '>=', $last_update);
-            });
-        }
         $data = $data->get();
         return $data;
     }

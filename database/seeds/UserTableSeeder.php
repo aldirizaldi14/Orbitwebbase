@@ -13,6 +13,7 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('user')->delete();
         DB::table('user')->insert([
             'user_username' => 'admin',
             'user_password' => bcrypt('123456'),

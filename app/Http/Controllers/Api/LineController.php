@@ -25,12 +25,13 @@ class LineController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = LineModel::select("line.*")
-            ->addSelect(DB::raw('1 as line_sync'));
+            ->addSelect(DB::raw('1 as line_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
-                $q->where('line_created_at', '>', $last_update)
-                    ->where('line_updated_at', '>', $last_update)
-                    ->where('line_deleted_at', '>', $last_update);
+                $q->where('line_created_at', '>=', $last_update)
+                    ->orWhere('line_updated_at', '>=', $last_update)
+                    ->orWhere('line_deleted_at', '>=', $last_update);
             });
         }
         $data = $data->get();

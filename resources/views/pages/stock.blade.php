@@ -174,6 +174,16 @@ $(document).ready(function() {
                 },
                 targets : [0]
             },
+            {
+                render: function(data,type,row,index){
+                    if(! data){
+                        return 'Unallocated';
+                    }else{
+                        return data;
+                    }
+                },
+                targets : [1]
+            },
         ],
         drawCallback: function(e,response){
             $(".btn-edit").click(function(event){

@@ -8,11 +8,13 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 use App\Model\TransferModel;
 use App\Model\AllocationModel;
 use App\Model\AllocationdetModel;
 use App\Model\AreaProductQty;
+use App\Model\AreaModel;
 use DB;
 use Log;
 use Response;
@@ -29,12 +31,17 @@ class AllocationController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = AllocationModel::select("allocation.*")
-            ->addSelect(DB::raw('1 as allocation_sync'));
+            ->addSelect(DB::raw('1 as allocation_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
                 $q->where('allocation_created_at', '>=', $last_update)
                     ->orWhere('allocation_updated_at', '>=', $last_update)
                     ->orWhere('allocation_deleted_at', '>=', $last_update);
+            });
+        }else{
+            $data->where(function($q) use ($last_update){
+                $q->where('allocation_created_at', '>=', Carbon::now()->subDays(2));
             });
         }
         $data = $data->get();
@@ -101,24 +108,28 @@ class AllocationController extends BaseController
                     ->where('product_id', $allocation->allocation_product_id)
                     ->first();
                 if(! $qty){
+                    $area = AreaModel::find($det->allocationdet_area_id);
+
                     $qty = new AreaProductQty();
                     $qty->qty_created_by = $user->user_username;
-                    $qty->warehouse_id = 0;
+                    $qty->warehouse_id = $area->area_warehouse_id;
                     $qty->area_id = $det->allocationdet_area_id;;
                     $qty->product_id = $allocation->allocation_product_id;
                     $qty->quantity = $det->allocationdet_qty;
+                    $qty->save();
                 }else{
-                    $qty->qty_updated_by = $user->user_username;
-                    $qty->quantity = $det->allocationdet_qty + $qty->quantity;
+                    $t = $det->allocationdet_qty + $qty->quantity;
+                    AreaProductQty::where('area_id', $det->allocationdet_area_id)
+                        ->where('product_id', $allocation->allocation_product_id)
+                        ->update(['qty_updated_by'=> $user->user_username, 'quantity'=> $t]);
                 }
-                $qty->save();
 
-                $qty = AreaProductQty::where('area_id', 0)
+                $qty = AreaProductQty::where('warehouse_id', 0)
                     ->where('product_id', $allocation->allocation_product_id)
                     ->first();
                 if($qty){
                     $t = $qty->quantity - $det->allocationdet_qty;
-                    AreaProductQty::where('area_id', 0)
+                    AreaProductQty::where('warehouse_id', 0)
                         ->where('product_id', $allocation->allocation_product_id)
                         ->update(['qty_updated_by'=> $user->user_username, 'quantity'=> $t]);
                 }

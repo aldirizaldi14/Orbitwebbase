@@ -8,7 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-use App\Model\Api\WarehouseModel;
+use App\Model\WarehouseModel;
 use DB;
 use Log;
 use Response;
@@ -25,12 +25,13 @@ class WarehouseController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = WarehouseModel::select("warehouse.*")
-            ->addSelect(DB::raw('1 as warehouse_sync'));
+            ->addSelect(DB::raw('1 as warehouse_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
-                $q->where('warehouse_created_at', '>', $last_update)
-                    ->where('warehouse_updated_at', '>', $last_update)
-                    ->where('warehouse_deleted_at', '>', $last_update);
+                $q->where('warehouse_created_at', '>=', $last_update)
+                    ->orWhere('warehouse_updated_at', '>=', $last_update)
+                    ->orWhere('warehouse_deleted_at', '>=', $last_update);
             });
         }
         $data = $data->get();

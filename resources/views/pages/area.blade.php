@@ -202,8 +202,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('area') }}/' + data.area_id,
-                            method: "DELETE",
+                            url: '{{ url('area') }}/delete/' + data.area_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {

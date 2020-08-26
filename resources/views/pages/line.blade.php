@@ -186,8 +186,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('line') }}/' + data.line_id,
-                            method: "DELETE",
+                            url: '{{ url('line') }}/delete/' + data.line_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {

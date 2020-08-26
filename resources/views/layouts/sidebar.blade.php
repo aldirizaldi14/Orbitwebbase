@@ -1,10 +1,12 @@
 @php
 $menuData = [];
-array_push($menuData, ['dashboard', 'Dashboard', 'fa-home']);
+array_push($menuData, ['/', 'Dashboard', 'fa-home']);
+array_push($menuData, ['MRP', 'MRP', 'fa-briefcase']);
 array_push($menuData, ['production', 'Production', 'fa-briefcase']);
 array_push($menuData, ['transfer', 'Transfer', 'fa-archive']);
 array_push($menuData, ['receipt', 'Receipt', 'fa-dropbox']);
 array_push($menuData, ['allocation', 'Allocation', 'fa-arrows-alt']);
+array_push($menuData, ['delivery', 'Deliery', 'fa-truck']);
 array_push($menuData, ['stock', 'Stock', 'fa-search']);
 array_push($menuData, ['warehouse', 'Warehouse', 'fa-building']);
 array_push($menuData, ['area', 'Area', 'fa-square']);

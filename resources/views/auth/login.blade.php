@@ -28,7 +28,7 @@
                     <div class="m-login__signin">
                         <div class="m-login__head">
                             <h3 class="m-login__title">
-                                UNIFIED PROCESS
+                                ORBIT
                             </h3>
                         </div>
                         <form class="m-login__form m-form"  method="POST" action="{{ route('login') }}">
@@ -57,7 +57,6 @@
             </div>
         </div>
     </div>
-
     <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/vendors.js') }}" type="text/javascript"></script>
 </body>

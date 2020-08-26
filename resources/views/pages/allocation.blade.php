@@ -154,7 +154,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ordering : true,
-        order: [[ 1, "asc" ]],
+        order: [[ 1, "desc" ]],
         ajax: function(data, callback, settings) {
             orderSort = tableColumn[data.order[0].column].data;
             orderDir = data.order[0].dir;
@@ -219,8 +219,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('allocation') }}/' + data.allocation_id,
-                            method: "DELETE",
+                            url: '{{ url('allocation') }}/delete/' + data.allocation_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {

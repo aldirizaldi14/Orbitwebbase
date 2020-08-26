@@ -42,6 +42,7 @@
                                         <th>Shift</th>
                                         <th>Batch</th>
                                         <th>Qty</th>
+                                        <th>Remark</th>
                                         <th>&nbsp;</th>
                                     </tr>
                                 </thead>
@@ -113,6 +114,7 @@ $(document).ready(function() {
         { data: "production_shift" },
         { data: "production_batch" },
         { data: "production_qty" },
+        { data: "production_remark" },
         { data: "production_id", width: 100, sortable: false}
     ];
     var orderSort = '';
@@ -125,7 +127,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ordering : true,
-        order: [[ 1, "asc" ]],
+        order: [[ 1, "desc" ]],
         ajax: function(data, callback, settings) {
             orderSort = tableColumn[data.order[0].column].data;
             orderDir = data.order[0].dir;
@@ -159,7 +161,7 @@ $(document).ready(function() {
                     content += '<button type="button" class="btn btn-delete btn-accent m-btn--pill btn-sm m-btn m-btn--custom" data-index="'+ index.row +'"><i class="m-nav__link-icon fa fa-trash"></i></button>';
                     return content;
                 },
-                targets : [8]
+                targets : [9]
             },
         ],
         drawCallback: function(e,response){
@@ -186,8 +188,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('production') }}/' + data.production_id,
-                            method: "DELETE",
+                            url: '{{ url('production') }}/delete/' + data.production_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {

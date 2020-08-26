@@ -25,12 +25,13 @@ class ProductController extends BaseController
     {
         $last_update = $request->get('last_update');
         $data = ProductModel::select("product.*")
-            ->addSelect(DB::raw('1 as product_sync'));
+            ->addSelect(DB::raw('1 as product_sync'))
+            ->withTrashed();
         if($last_update){
             $data->where(function($q) use ($last_update){
-                $q->where('product_created_at', '>', $last_update)
-                    ->where('product_updated_at', '>', $last_update)
-                    ->where('product_deleted_at', '>', $last_update);
+                $q->where('product_created_at', '>=', $last_update)
+                    ->orWhere('product_updated_at', '>=', $last_update)
+                    ->orWhere('product_deleted_at', '>=', $last_update);
             });
         }
         $data = $data->get();

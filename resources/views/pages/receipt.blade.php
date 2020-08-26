@@ -92,7 +92,6 @@
                             <th>Product Code</th>
                             <th>Product</th>
                             <th>Quantity</th>
-                            <th>Note</th>
                         </tr>
                     </thead>
                 </table>
@@ -145,7 +144,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ordering : true,
-        order: [[ 1, "asc" ]],
+        order: [[ 1, "desc" ]],
         ajax: function(data, callback, settings) {
             orderSort = tableColumn[data.order[0].column].data;
             orderDir = data.order[0].dir;
@@ -209,8 +208,8 @@ $(document).ready(function() {
                 .then((confirm) => {
                     if (confirm.value) {
                         $.ajax({
-                            url: '{{ url('receipt') }}/' + data.receipt_id,
-                            method: "DELETE",
+                            url: '{{ url('receipt') }}/delete/' + data.receipt_id,
+                            method: "post",
                             dataType : 'json'
                         })
                         .done(function(resp) {
@@ -239,7 +238,6 @@ $(document).ready(function() {
         { data: "product_code" },
         { data: "product_description" },
         { data: "receiptdet_qty" },
-        { data: "receiptdet_note" },
     ];
     var tableDetail = $("#tableDetail").DataTable({
         filter : false,
